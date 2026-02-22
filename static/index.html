@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus M&A | Deal Intelligence</title>
+    <title>Nexus M&A | Deal Intelligence Platform</title>
+    <meta name="description" content="AI-powered M&A due diligence platform for merger and acquisition analysis.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar Navigation -->
@@ -15,16 +18,34 @@
                 <span class="logo-icon">💠</span> Nexus <span class="highlight">M&A</span>
             </div>
             <nav class="nav-menu">
-                <a href="#" class="nav-item active">
-                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <a href="#" class="nav-item active" data-view="analysis">
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                        stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
                     Analysis Hub
                 </a>
-                <a href="#" class="nav-item">
-                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                <a href="#" class="nav-item" data-view="graph">
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                        stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                        </path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
                     Knowledge Graph
                 </a>
-                <a href="#" class="nav-item">
-                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <a href="#" class="nav-item" data-view="risk">
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+                        stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
                     Risk Models
                 </a>
             </nav>
@@ -36,77 +57,253 @@
         <!-- Main Content Area -->
         <main class="main-content">
             <header class="topbar">
-                <h1>Deal Analysis Engine</h1>
+                <h1 id="viewTitle">Deal Analysis Engine</h1>
                 <div class="user-profile">
                     <span class="status-indicator"></span> System Online
                 </div>
             </header>
 
-            <div class="content-grid">
-                <!-- Configuration Panel -->
-                <section class="panel config-panel glass-panel">
-                    <h2>Strategy Configuration</h2>
-                    <p class="subtitle">Set parameters to constrain AI reasoning logic.</p>
-                    
-                    <form id="analysisForm">
-                        <div class="form-group">
-                            <label for="objective">Strategic Objective</label>
-                            <input type="text" id="objective" value="Vertical Integration" placeholder="E.g., Horizontal Expansion">
-                        </div>
+            <!-- ═══ VIEW: Analysis Hub ═══ -->
+            <div id="view-analysis" class="view-section">
+                <div class="content-grid">
+                    <!-- LEFT COLUMN -->
+                    <div class="left-column">
 
-                        <div class="form-row">
-                            <div class="form-group half">
-                                <label for="horizon">Time Horizon (Months)</label>
-                                <input type="number" id="horizon" value="24" min="1" max="120">
+                        <!-- Deal Type Selector -->
+                        <section class="panel glass-panel deal-type-panel">
+                            <h2>Deal Type</h2>
+                            <p class="subtitle">Select the nature of this transaction.</p>
+                            <div class="deal-toggle" id="dealToggle">
+                                <button class="deal-btn active" data-type="acquisition" id="btnAcquisition">
+                                    <span class="deal-icon">🏢</span>
+                                    <span class="deal-label">Acquisition</span>
+                                    <span class="deal-desc">One company purchases another</span>
+                                </button>
+                                <button class="deal-btn" data-type="merger" id="btnMerger">
+                                    <span class="deal-icon">🤝</span>
+                                    <span class="deal-label">Merger</span>
+                                    <span class="deal-desc">Two equals join as one entity</span>
+                                </button>
                             </div>
-                            
-                            <div class="form-group half">
-                                <label for="risk">Risk Tolerance</label>
-                                <select id="risk">
-                                    <option value="low">Low Risk</option>
-                                    <option value="medium" selected>Medium Risk</option>
-                                    <option value="high">High Risk</option>
-                                </select>
+                        </section>
+
+                        <!-- Company Documents -->
+                        <section class="panel glass-panel upload-panel">
+                            <h2>Company Documents</h2>
+                            <p class="subtitle">Upload financial reports, LOIs, or any deal documents.</p>
+
+                            <div class="upload-grid">
+                                <!-- Company A -->
+                                <div class="upload-card" id="uploadCardA">
+                                    <div class="upload-card-header">
+                                        <div class="company-badge badge-a">A</div>
+                                        <div class="company-info">
+                                            <input type="text" class="company-name-input" id="companyNameA"
+                                                placeholder="Company A name…" autocomplete="off">
+                                            <div class="role-tag" id="roleTagA">Acquirer</div>
+                                        </div>
+                                    </div>
+                                    <div class="upload-card-sub" id="fileNameA">No file selected</div>
+                                    <label class="file-drop-zone" id="dropZoneA" for="fileInputA">
+                                        <div class="drop-icon">📄</div>
+                                        <div class="drop-text">Drop PDF or TXT here</div>
+                                        <div class="drop-sub">or click to browse</div>
+                                        <input type="file" id="fileInputA" class="hidden-input" accept=".pdf,.txt,.md">
+                                    </label>
+                                    <button class="btn btn-upload" id="uploadBtnA" disabled>
+                                        <span class="btn-text">Extract Text</span>
+                                        <div class="loader-spinner upload-spinner" id="spinnerA" style="display:none;">
+                                        </div>
+                                    </button>
+                                    <div class="upload-status" id="statusA"></div>
+                                </div>
+
+                                <!-- Company B -->
+                                <div class="upload-card" id="uploadCardB">
+                                    <div class="upload-card-header">
+                                        <div class="company-badge badge-b">B</div>
+                                        <div class="company-info">
+                                            <input type="text" class="company-name-input" id="companyNameB"
+                                                placeholder="Company B name…" autocomplete="off">
+                                            <div class="role-tag role-tag-b" id="roleTagB">Acquiree</div>
+                                        </div>
+                                    </div>
+                                    <div class="upload-card-sub" id="fileNameB">No file selected</div>
+                                    <label class="file-drop-zone" id="dropZoneB" for="fileInputB">
+                                        <div class="drop-icon">📄</div>
+                                        <div class="drop-text">Drop PDF or TXT here</div>
+                                        <div class="drop-sub">or click to browse</div>
+                                        <input type="file" id="fileInputB" class="hidden-input" accept=".pdf,.txt,.md">
+                                    </label>
+                                    <button class="btn btn-upload" id="uploadBtnB" disabled>
+                                        <span class="btn-text">Extract Text</span>
+                                        <div class="loader-spinner upload-spinner" id="spinnerB" style="display:none;">
+                                        </div>
+                                    </button>
+                                    <div class="upload-status" id="statusB"></div>
+                                </div>
                             </div>
-                        </div>
+                        </section>
 
-                        <div class="form-group">
-                            <label for="query">Analyst Query <span class="badge">LLM Prompt</span></label>
-                            <textarea id="query" rows="4" placeholder="What are the specific synergies and critical risks associated with this target?">Analyze cost synergies and key risks for Project Falcon</textarea>
-                        </div>
+                        <!-- Strategy Configuration -->
+                        <section class="panel config-panel glass-panel">
+                            <h2>Strategy Configuration</h2>
+                            <p class="subtitle">Set parameters to constrain AI reasoning logic.</p>
 
-                        <button type="submit" class="btn btn-primary" id="runBtn">
-                            <span class="btn-text">Execute Analysis Pipeline</span>
-                            <div class="loader-spinner" id="btnLoader" style="display: none;"></div>
-                        </button>
-                    </form>
-                </section>
+                            <form id="analysisForm">
+                                <!-- Strategic Objectives (multi-select) -->
+                                <div class="form-group">
+                                    <label>Strategic Objectives <span class="badge">Select all that apply</span></label>
+                                    <div class="objectives-grid" id="objectivesGrid">
+                                        <label class="obj-chip">
+                                            <input type="checkbox" name="objective" value="Vertical Integration"
+                                                checked>
+                                            <span>📊 Vertical Integration</span>
+                                        </label>
+                                        <label class="obj-chip">
+                                            <input type="checkbox" name="objective" value="Horizontal Expansion">
+                                            <span>🌐 Horizontal Expansion</span>
+                                        </label>
+                                        <label class="obj-chip">
+                                            <input type="checkbox" name="objective" value="Market Share Acquisition">
+                                            <span>📈 Market Share Acquisition</span>
+                                        </label>
+                                        <label class="obj-chip">
+                                            <input type="checkbox" name="objective" value="Technology Acquisition">
+                                            <span>💡 Technology Acquisition</span>
+                                        </label>
+                                        <label class="obj-chip">
+                                            <input type="checkbox" name="objective" value="Talent Acquisition">
+                                            <span>👥 Talent Acquisition</span>
+                                        </label>
+                                        <label class="obj-chip">
+                                            <input type="checkbox" name="objective" value="Geographic Expansion">
+                                            <span>🗺️ Geographic Expansion</span>
+                                        </label>
+                                        <label class="obj-chip">
+                                            <input type="checkbox" name="objective" value="Cost Synergy">
+                                            <span>💰 Cost Synergy</span>
+                                        </label>
+                                        <label class="obj-chip">
+                                            <input type="checkbox" name="objective" value="Diversification">
+                                            <span>🔀 Diversification</span>
+                                        </label>
+                                    </div>
+                                </div>
 
-                <!-- Output Panel -->
-                <section class="panel output-panel glass-panel">
-                    <div class="output-header">
-                        <h2>Synthesis Report</h2>
-                        <div class="status-badge" id="reportStatus">Waiting for input</div>
+                                <div class="form-row">
+                                    <div class="form-group half">
+                                        <label for="horizon">Time Horizon (Months)</label>
+                                        <input type="number" id="horizon" value="24" min="1" max="120">
+                                    </div>
+                                    <div class="form-group half">
+                                        <label for="risk">Risk Tolerance</label>
+                                        <select id="risk">
+                                            <option value="low">Low Risk</option>
+                                            <option value="medium" selected>Medium Risk</option>
+                                            <option value="high">High Risk</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="query">Analyst Query <span class="badge">LLM Prompt</span></label>
+                                    <textarea id="query" rows="3"
+                                        placeholder="What are the specific synergies and critical risks for this deal?">Analyze cost synergies and key risks for this deal</textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" id="runBtn">
+                                    <span class="btn-text">⚡ Execute Analysis Pipeline</span>
+                                    <div class="loader-spinner" id="btnLoader" style="display: none;"></div>
+                                </button>
+                            </form>
+                        </section>
                     </div>
-                    
-                    <div class="report-content" id="reportContainer">
-                        <div class="empty-state">
-                            <div class="empty-icon">📊</div>
-                            <p>Configure strategy parameters and execute pipeline to generate a diligence report.</p>
-                            <ul class="features-list">
-                                <li>✅ Graph-backed Factual Grounding</li>
-                                <li>✅ Deterministic Synergy Models</li>
-                                <li>✅ Zero-Hallucination Constraints</li>
-                            </ul>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="right-column">
+                        <section class="panel output-panel glass-panel">
+                            <div class="output-header">
+                                <h2>Analysis Reports</h2>
+                                <div class="status-badge" id="reportStatus">Waiting for input</div>
+                            </div>
+                            <div class="report-tabs" id="reportTabs" style="display: none;">
+                                <button class="tab-btn active" data-tab="risk_analysis">⚠️ Risk Analysis</button>
+                                <button class="tab-btn" data-tab="synergy_report">🔗 Synergy</button>
+                                <button class="tab-btn" data-tab="valuation_summary">💰 Valuation</button>
+                                <button class="tab-btn" data-tab="conclusion_report">📋 Conclusion</button>
+                            </div>
+                            <div class="report-content" id="reportContainer">
+                                <div class="empty-state">
+                                    <div class="empty-icon">📊</div>
+                                    <p>Upload company documents, configure strategy, and execute the pipeline.</p>
+                                    <ul class="features-list">
+                                        <li>✅ Risk Analysis Report</li>
+                                        <li>✅ Synergy &amp; Opportunities Report</li>
+                                        <li>✅ Valuation Summary Report</li>
+                                        <li>✅ Executive Conclusion Report</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ VIEW: Knowledge Graph ═══ -->
+            <div id="view-graph" class="view-section" style="display:none;">
+                <div class="placeholder-view">
+                    <div class="placeholder-icon">🕸️</div>
+                    <h2>Knowledge Graph</h2>
+                    <p>The interactive knowledge graph visualises entity relationships extracted from your uploaded
+                        company documents.</p>
+                    <div class="placeholder-steps">
+                        <div class="step-card">
+                            <div class="step-num">1</div>
+                            <div>Upload company documents in <strong>Analysis Hub</strong></div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">2</div>
+                            <div>Run the analysis pipeline to populate the graph</div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">3</div>
+                            <div>Return here to explore entity relationships and citations</div>
                         </div>
                     </div>
-                </section>
+                    <span class="coming-soon-badge">Coming in Next Release</span>
+                </div>
+            </div>
+
+            <!-- ═══ VIEW: Risk Models ═══ -->
+            <div id="view-risk" class="view-section" style="display:none;">
+                <div class="placeholder-view">
+                    <div class="placeholder-icon">📉</div>
+                    <h2>Risk Models</h2>
+                    <p>Deterministic quantitative risk models evaluate deal-specific exposure across financial,
+                        regulatory, and operational dimensions.</p>
+                    <div class="placeholder-steps">
+                        <div class="step-card">
+                            <div class="step-num">🏦</div>
+                            <div>Financial Risk — Debt service coverage, leverage ratio analysis</div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">⚖️</div>
+                            <div>Regulatory Risk — Antitrust exposure scoring by jurisdiction</div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-num">🔧</div>
+                            <div>Operational Risk — Integration complexity index</div>
+                        </div>
+                    </div>
+                    <span class="coming-soon-badge">Coming in Next Release</span>
+                </div>
             </div>
         </main>
     </div>
 
-    <!-- Marked.js for Markdown Rendering -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

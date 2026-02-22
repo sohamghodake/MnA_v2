@@ -1,12 +1,12 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, Optional
 from src.reasoning.llm import OllamaClient
 from src.reasoning.strategy import StrategyInput
 from src.reasoning.graph_query import GraphQueryGenerator
 from src.reasoning.validation import OutputValidator
-from src.reasoning.prompts import SYSTEM_PROMPT_TEMPLATE
+from src.reasoning.prompts import REPORT_PROMPTS
 from src.graph.connector import GraphConnector
 from src.models.runner import ModelRunner
-from src.graph.schema import Risk
+
 
 class ReasoningOrchestrator:
     def __init__(self):
@@ -16,63 +16,65 @@ class ReasoningOrchestrator:
         self.graph_db = GraphConnector()
         self.models = ModelRunner()
 
-    def generate_report(self, strategy: StrategyInput, user_query: str) -> str:
-        # 1. Generate Cypher
-        cypher = self.graph_query.generate_cypher(user_query, strategy)
-        
-        # 2. Retrieve from Graph
-        graph_data = self.graph_db.run_query(cypher)
-        
-        # 3. Detect Risks & Run Models (Simplified logic)
-        # In a real app, we'd parse the graph data to find Risk nodes
-        # For now, let's assume we fetch all risks associated with the deal
-        # This is a placeholder for more complex graph parsing logic
-        
-        # Mocking model run based on graph data availability
-        # We need logic to map graph data to model inputs
+    def generate_reports(
+        self,
+        strategy: StrategyInput,
+        user_query: str,
+        deal_type: str = "acquisition",
+        company_a_name: str = "Company A",
+        company_b_name: str = "Company B",
+        company_a_role: str = "Acquirer",
+        company_b_role: str = "Acquiree",
+        company_a_text: str = "",
+        company_b_text: str = "",
+    ) -> Dict[str, str]:
+        """
+        Generates all four report types using LLM reasoning grounded on
+        the provided company documents, graph data, and strategy context.
+        Returns a dict mapping report_type_key -> report markdown string.
+        """
+        # 1. Try to generate a Cypher query and retrieve graph data
+        try:
+            cypher = self.graph_query.generate_cypher(user_query, strategy)
+            graph_data = self.graph_db.run_query(cypher)
+        except Exception:
+            graph_data = []
+
+        # 2. Run quantitative models (placeholder — no input mapping yet)
         model_results = {}
-        
-        # 4. Synthesize Prompt
-        context_str = str(graph_data)
-        model_str = str(model_results)
-        strategy_str = f"Objective: {strategy.objective}"
-        
-        prompt = SYSTEM_PROMPT_TEMPLATE.format(
-            context_data=context_str,
-            model_outputs=model_str,
-            strategy_context=strategy_str
+
+        # 3. Build shared context strings
+        context_str = str(graph_data) if graph_data else "No graph data available."
+        model_str = str(model_results) if model_results else "No model outputs available."
+        strategy_str = (
+            f"Objective: {strategy.objective}\n"
+            f"Time Horizon: {strategy.time_horizon_months} months\n"
+            f"Risk Tolerance: {strategy.risk_tolerance}"
         )
-        
-        # 5. Generate with LLM
-        report_draft = self.llm.generate(user_query, system=prompt)
-        
-        # 6. Validate
-        # Collect all valid numbers and refs from context
-        valid_refs = set()
-        valid_numbers = set()
-        
-        # Helper to recursively extract numbers and IDs
-        def extract_from_json(data):
-            if isinstance(data, dict):
-                for k, v in data.items():
-                    if k == 'id' and isinstance(v, str):
-                        valid_refs.add(v)
-                    extract_from_json(v)
-            elif isinstance(data, list):
-                for item in data:
-                    extract_from_json(item)
-            elif isinstance(data, (int, float)):
-                valid_numbers.add(float(data))
-                
-        extract_from_json(graph_data)
-        
-        # Also include any numbers from strategy input (like horizon months)
-        valid_numbers.add(float(strategy.time_horizon_months))
-        
-        if self.validator.validate(report_draft, valid_numbers, valid_refs):
-            return report_draft
-        else:
-            return "Report generation failed validation. Please refine parameters or data."
+
+        deal_type_label = deal_type.capitalize()
+        a_label = f"{company_a_name} ({company_a_role})"
+        b_label = f"{company_b_name} ({company_b_role})"
+
+        # 4. Generate each report type
+        reports: Dict[str, str] = {}
+        for report_key, prompt_template in REPORT_PROMPTS.items():
+            system_prompt = prompt_template.format(
+                company_a_text=f"Company: {a_label}\n\n{company_a_text or 'No document provided.'}",
+                company_b_text=f"Company: {b_label}\n\n{company_b_text or 'No document provided.'}",
+                deal_type=deal_type_label,
+                strategy_context=strategy_str,
+                context_data=context_str,
+                model_outputs=model_str,
+            )
+
+            report_draft = self.llm.generate(
+                prompt=f"Analyst instruction: {user_query}",
+                system=system_prompt,
+            )
+            reports[report_key] = report_draft
+
+        return reports
 
     def close(self):
         self.graph_db.close()

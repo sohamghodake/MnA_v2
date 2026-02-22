@@ -1,49 +1,44 @@
-import requests
-import json
-from typing import List, Dict, Generator
+import ollama
+from typing import Dict
 from src.config import settings
+
 
 class OllamaClient:
     def __init__(self):
-        self.base_url = settings.ollama.base_url
+        self.client = ollama.Client(host=settings.ollama.base_url)
         self.model = settings.ollama.model
 
     def generate(self, prompt: str, system: str = None) -> str:
-        """Generates a response from the LLM."""
-        url = f"{self.base_url}/api/generate"
-        payload = {
-            "model": self.model,
-            "prompt": prompt,
-            "stream": False
-        }
+        """Generates a response from the LLM using the ollama SDK."""
+        messages = []
         if system:
-            payload["system"] = system
-            
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
         try:
-            response = requests.post(url, json=payload)
-            response.raise_for_status()
-            return response.json().get("response", "")
-        except requests.exceptions.RequestException as e:
+            response = self.client.chat(
+                model=self.model,
+                messages=messages,
+            )
+            return response.message.content
+        except Exception as e:
             raise ConnectionError(f"Failed to connect to Ollama: {e}")
 
     def generate_json(self, prompt: str, schema: Dict, system: str = None) -> Dict:
-        """Generates structured JSON output."""
-        # Note: Ollama's JSON mode is model-dependent.
-        # We enforce it via prompt and format parameter if supported.
-        url = f"{self.base_url}/api/generate"
-        payload = {
-            "model": self.model,
-            "prompt": prompt,
-            "format": "json",
-            "stream": False
-        }
+        """Generates structured JSON output using the ollama SDK."""
+        import json
+        messages = []
         if system:
-            payload["system"] = system
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
 
         try:
-            response = requests.post(url, json=payload)
-            response.raise_for_status()
-            text = response.json().get("response", "")
+            response = self.client.chat(
+                model=self.model,
+                messages=messages,
+                format="json",
+            )
+            text = response.message.content
             return json.loads(text)
-        except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
+        except Exception as e:
             raise ValueError(f"Failed to generate JSON: {e}")
