@@ -1,4 +1,5 @@
 from typing import Dict, Any, Optional
+import datetime
 from src.reasoning.llm import OllamaClient
 from src.reasoning.strategy import StrategyInput
 from src.reasoning.graph_query import GraphQueryGenerator
@@ -59,6 +60,7 @@ class ReasoningOrchestrator:
         # 4. Generate each report type
         reports: Dict[str, str] = {}
         for report_key, prompt_template in REPORT_PROMPTS.items():
+            print(f"[{datetime.datetime.now().strftime('%H:%M:%S')}] Generating {report_key}...")
             system_prompt = prompt_template.format(
                 company_a_text=f"Company: {a_label}\n\n{company_a_text or 'No document provided.'}",
                 company_b_text=f"Company: {b_label}\n\n{company_b_text or 'No document provided.'}",
@@ -73,7 +75,9 @@ class ReasoningOrchestrator:
                 system=system_prompt,
             )
             reports[report_key] = report_draft
+            print(f"[{datetime.datetime.now().strftime('%H:%M:%S')}] Finished {report_key}.")
 
+        print("All reports generated successfully.")
         return reports
 
     def close(self):

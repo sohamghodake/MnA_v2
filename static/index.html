@@ -225,7 +225,13 @@
                         <section class="panel output-panel glass-panel">
                             <div class="output-header">
                                 <h2>Analysis Reports</h2>
-                                <div class="status-badge" id="reportStatus">Waiting for input</div>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <div class="status-badge" id="reportStatus">Waiting for input</div>
+                                    <button class="btn btn-outline" id="downloadBtn"
+                                        style="display: none; padding: 0.3rem 0.8rem; font-size: 0.75rem;">
+                                        📥 Download .md
+                                    </button>
+                                </div>
                             </div>
                             <div class="report-tabs" id="reportTabs" style="display: none;">
                                 <button class="tab-btn active" data-tab="risk_analysis">⚠️ Risk Analysis</button>

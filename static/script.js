@@ -145,6 +145,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ── Download Logic ────────────────────────────────────────────────────────
+    const downloadBtn = document.getElementById('downloadBtn');
+    downloadBtn.addEventListener('click', () => {
+        if (!currentReports || Object.keys(currentReports).length === 0) return;
+
+        let fullReport = '';
+        const order = ['conclusion_report', 'risk_analysis', 'synergy_report', 'valuation_summary'];
+        order.forEach(k => {
+            if (currentReports[k]) fullReport += currentReports[k] + '\n\n';
+        });
+
+        const blob = new Blob([fullReport], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Nexus_MnA_Report_${new Date().toISOString().slice(0, 10)}.md`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+
     // ── Analysis Form ─────────────────────────────────────────────────────────
     document.getElementById('analysisForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -233,10 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             reportStatus.textContent = data.status === 'success' ? 'ANALYSIS COMPLETE' : 'VALIDATION FAILED';
             reportStatus.className = `status-badge ${data.status === 'success' ? 'verified' : 'failed'}`;
+            downloadBtn.style.display = 'block'; // Show download button on success
 
         } catch (error) {
             console.error('Analysis error:', error);
             reportTabs.style.display = 'none';
+            downloadBtn.style.display = 'none'; // Hide download button on error
             reportStatus.textContent = 'SYSTEM ERROR';
             reportStatus.className = 'status-badge failed';
             reportContainer.innerHTML = `
